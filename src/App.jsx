@@ -7,6 +7,7 @@ import Header from './Header';
 import SearchForm from './SearchForm';
 import Testimonials from './Testimonials';
 import EducationLoanPage from './EducationLoanPage'; // Import the new component
+import Footer from './Footer';
 
 
 
@@ -32,6 +33,7 @@ const App = () => {
     <Router> {/* Wrap your app with Router */}
       <div className="min-h-screen bg-gray-100">
         <Header user={user} signIn={signIn} />
+
         <main className="container mx-auto px-4 py-8">
           <Routes> {/* Define routes here */}
             <Route
@@ -54,6 +56,8 @@ const App = () => {
           </Routes>
           <Testimonials />
         </main>
+
+        <Footer />
       </div>
     </Router>
   );
