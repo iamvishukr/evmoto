@@ -39,24 +39,7 @@ const App = () => {
         <Header user={user} signIn={signIn} />
         <main className="container mx-auto px-4 py-8">
           <Routes>
-            <Route
-              path="/"
-              element={
-                <div className="flex flex-col md:flex-row items-center justify-between mt-10">
-                  <div className="mb-8 md:mb-0">
-                    <h2 className="text-4xl font-bold text-gray-800 mb-4">
-                      Best way to fund your Study Abroad
-                    </h2>
-                    <p className="text-gray-600 mb-6">
-                      Discover and apply to thousands of international
-                      scholarships <br />and get the best education loan matching your
-                      profile
-                    </p>
-                    <SearchForm />
-                  </div>
-                </div>
-              }
-            />
+            <Route path="/" element={<SearchForm />} />
             <Route path="/education-loan" element={<EducationLoanPage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
@@ -64,8 +47,10 @@ const App = () => {
           <Testimonials />
           <Partners />
         </main>
-
         <Footer />
+      <Routes>
+        
+      </Routes>
       </div>
     </Router>
   );

@@ -1,23 +1,18 @@
-import { useState } from 'react'
-import { X } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import SearchForm from './SearchForm'
+import { useState } from "react";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import SearchForm from "./SearchForm";
 export default function Component() {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(true);
 
-  const handleClose = () => setIsOpen(false)
+  const handleClose = () => setIsOpen(false);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-4xl">
+    <>
       <SearchForm />
-        {/* Add more content for the background component here */}
-      </div>
-
-      {/* Login Modal */}
       {isOpen && (
-        <div className="z-50 inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div className="z-50 inset-0 fixed bg-black bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md relative">
             <button
               onClick={handleClose}
@@ -28,12 +23,19 @@ export default function Component() {
             </button>
             <div className="p-6">
               <div className="flex justify-center mb-4">
-                <img src="https://www.wemakescholars.com/themes/wms/images/logo.webp" alt="WE MAKE SCHOLARS Logo" className="h-16 p-1" />
+                <img
+                  src="https://www.wemakescholars.com/themes/wms/images/logo.webp"
+                  alt="WE MAKE SCHOLARS Logo"
+                  className="h-16 p-1"
+                />
               </div>
               <h2 className="text-xl font-semibold text-center mb-4">
-                The most trusted Education Finance Platform supported by the Government
+                The most trusted Education Finance Platform supported by the
+                Government
               </h2>
-              <p className="text-center mb-4">Enter your registered Email address to login</p>
+              <p className="text-center mb-4">
+                Enter your registered Email address to login
+              </p>
               <Input
                 type="email"
                 placeholder="Enter Email Address"
@@ -46,6 +48,6 @@ export default function Component() {
           </div>
         </div>
       )}
-    </div>
-  )
+    </>
+  );
 }
