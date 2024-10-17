@@ -8,15 +8,7 @@ import SearchForm from './SearchForm';
 import Testimonials from './Testimonials';
 import EducationLoanPage from './EducationLoanPage'; // Import the new component
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDXtJQWID5snsexZS55w9uFp0xidecz08A",
-  authDomain: "evmoto-8d67a.firebaseapp.com",
-  projectId: "evmoto-8d67a",
-  storageBucket: "evmoto-8d67a.appspot.com",
-  messagingSenderId: "708171830876",
-  appId: "1:708171830876:web:93caafa8cbe6ed83b53899",
-  measurementId: "G-84N56V351W"
-};
+
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
