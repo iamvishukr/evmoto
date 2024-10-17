@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Header = () => {
   return (
     <header
@@ -12,9 +14,11 @@ const Header = () => {
         />
       </div>
       <div className="flex items-center space-x-2">
-        <button className="px-3 py-1 text-sm  text-black rounded hover:text-[#1FBBA6] transition-colors">
-          Login
-        </button>
+        <Link to="/login">
+          <button className="px-3 py-1 text-sm  text-black rounded hover:text-[#1FBBA6] transition-colors">
+            Login
+          </button>
+        </Link>
         <button className="px-3 py-1 text-sm bg-[#1FBBA6] text-white hover:bg-[#45867f] transition-colors">
           Sign Up
         </button>
