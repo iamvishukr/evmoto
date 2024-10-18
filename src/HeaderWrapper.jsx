@@ -62,7 +62,7 @@ const LowerHeader = ({ user, handleLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
-    <header className="w-full bg-white shadow-md">
+    <header className="w-full bg-white rounded-lg shadow-md ">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <img
           src="https://www.wemakescholars.com/themes/wms/images/logo.webp"

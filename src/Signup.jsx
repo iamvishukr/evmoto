@@ -15,6 +15,7 @@ const signupSchema = z.object({
   agreeTerms: z.boolean().refine((val) => val === true, {
     message: "You must agree to the terms and conditions",
   }),
+  
 });
 
 // Dropdown options
