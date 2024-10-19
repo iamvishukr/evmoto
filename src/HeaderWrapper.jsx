@@ -26,7 +26,7 @@ const UpperHeader = ({ onLoginClick }) => {
 
   return (
     <header
-      className="flex justify-between items-center p-4"
+      className="flex justify-between items-center p-4 bg-gray-800 shadow-lg shadow-gray-500 rounded-2xl"
       style={{ height: "80px" }}
     >
       <div className="flex items-center p-4">
@@ -44,7 +44,7 @@ const UpperHeader = ({ onLoginClick }) => {
               className={`px-3 py-1 text-sm rounded transition-colors ${
                 location.pathname === "/login"
                   ? "text-blue-600"
-                  : "text-black hover:text-[#1FBBA6]"
+                  : "text-white hover:text-[#1FBBA6]"
               }`}
             >
               Login
@@ -73,7 +73,7 @@ const LowerHeader = ({ user, handleLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
-    <header className="w-full bg-white rounded-lg shadow-md ">
+    <header className="w-full bg-gray-800 shadow-lg shadow-gray-500 rounded-2xl">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <img
           src={logo}
@@ -86,7 +86,7 @@ const LowerHeader = ({ user, handleLogout }) => {
               className={`font-semibold ${
                 location.pathname === "/scholarships"
                   ? "text-blue-600"
-                  : "text-gray-700 hover:text-[#1FBBA6]"
+                  : "text-white hover:text-[#1FBBA6]"
               }`}
             >
               Scholarships
@@ -97,7 +97,7 @@ const LowerHeader = ({ user, handleLogout }) => {
             onMouseEnter={() => setEduLoansOpen(true)}
             onMouseLeave={() => setEduLoansOpen(false)}
           >
-            <button className="flex items-center text-gray-700">
+            <button className="flex items-center text-gray-200">
               Edu loans <ChevronDown className="ml-1 h-4" />
             </button>
             {eduLoansOpen && (
@@ -116,7 +116,7 @@ const LowerHeader = ({ user, handleLogout }) => {
               className={`flex items-center ${
                 location.pathname === "/services"
                   ? "text-blue-600"
-                  : "text-gray-700 hover:text-[#1FBBA6]"
+                  : "text-gray-200 hover:text-[#1FBBA6]"
               }`}
             >
               More <ChevronDown className="ml-1 h-4 w-4" />
@@ -126,7 +126,7 @@ const LowerHeader = ({ user, handleLogout }) => {
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center space-x-2 text-gray-700 hover:text-teal-600"
+                className="flex items-center space-x-2 text-gray-200 hover:text-teal-600"
               >
                 <img
                   src={photo}
@@ -198,7 +198,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
       if (userDoc.exists()) {
         const userData = userDoc.data();
         const isAdmin = userData.isAdmin; // Access isAdmin field
-        console.log(isAdmin);
+      //  console.log(isAdmin);
         localStorage.setItem("isAdmin", isAdmin);
         localStorage.setItem("userEmail", email);
         toast.success("Login successful!");
@@ -212,7 +212,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
           onClose();
         }
       } else {
-        toast.error("No such document!");
+        toast.error("Please signup first !!");
       }
       // Store user data in localStorage
     } catch (error) {
@@ -235,7 +235,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
           <X size={24} />
         </button>
         <div className="p-6">
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-4 bg-gray-500 rounded-2xl">
             <img
               src={logo}
               alt="WE MAKE SCHOLARS Logo"
@@ -274,21 +274,6 @@ export default function HeaderWrapper() {
   const [user, setUser] = useState(localStorage.getItem("userEmail"));
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       // User is signed in
-  //       setUser(user);
-  //     } else {
-  //       // User is signed out
-  //       setUser(null);
-  //     }
-  //   });
-
-  //   // Cleanup subscription on unmount
-  //   return () => unsubscribe();
-  // }, []);
-
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -318,7 +303,7 @@ export default function HeaderWrapper() {
   }
   Navigate("/admin-dashboard");
 
-  console.log(user);
+ // console.log(user);
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
