@@ -19,22 +19,37 @@ export default function LoginComponent() {
     setError("");
 
     try {
+      // Check if the user is admin
+      // if (email === import.meta.env.VITE_ADMIN_LOGIN) {
+      //   // Store admin email in localStorage
+      //   localStorage.setItem("userEmail", email);
+      //   localStorage.setItem("isAdmin", "true");
+      //   toast.success("Admin login successful!");
+      //   navigate("/admin-dashboard");
+      //   return;
+      // }
+
       // Fetch user data from Firestore by email
       const userDoc = await getDoc(doc(db, "users", email));
-      if (!userDoc.exists()) {
-        throw new Error("User not found. Please sign up first.");
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const isAdmin = userData.isAdmin; // Access isAdmin field
+        localStorage.setItem("userData", JSON.stringify(userDoc.data()));
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("isAdmin", isAdmin);
+       toast.success("Login successful!");
+        if(isAdmin){
+          navigate("/admin-dashboard");
+        }
+        navigate("/scholar-main"); // Redirect to scholar main page for regular users
+      } else {
+        console.log("No such document!");
       }
-
-      // Store user data in localStorage
-      localStorage.setItem("userData", JSON.stringify(userDoc.data()));
-      localStorage.setItem("userEmail", email);
-
-      toast.success("Login successful!");
-      navigate("/dashboard"); // Redirect to dashboard or home page
     } catch (error) {
       setError(error.message);
       console.error("Error during login:", error);
-      toast.error(error.message);
+     toast.error(error.message);
     }
   };
 
@@ -57,9 +72,10 @@ export default function LoginComponent() {
             />
           </div>
           <h2 className="text-xl font-semibold text-center mb-4">
-            The most trusted Education Finance Platform supported by the Government
+            The most trusted Education Finance Platform supported by the
+            Government
           </h2>
-         
+
           <form onSubmit={handleLogin}>
             <Input
               type="email"
@@ -69,7 +85,10 @@ export default function LoginComponent() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <Button type="submit" className="w-full bg-teal-500 hover:bg-teal-600 text-white">
+            <Button
+              type="submit"
+              className="w-full bg-teal-500 hover:bg-teal-600 text-white"
+            >
               Login
             </Button>
           </form>

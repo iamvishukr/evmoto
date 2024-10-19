@@ -1,15 +1,61 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
-import { Select } from "./components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "./components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+
+// Initialize Firebase (replace with your own config)
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 const EducationLoanPage = () => {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
   const [nationality, setNationality] = useState("");
+  const [purpose, setPurpose] = useState("");
+  const [loanAmount, setLoanAmount] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted", { nationality });
+    try {
+      const docRef = await addDoc(collection(db, "educationLoanEnquiries"), {
+        fullName,
+        email,
+        nationality,
+        purpose,
+        loanAmount: parseFloat(loanAmount),
+        createdAt: new Date(),
+      });
+      console.log("Document written with ID: ", docRef.id);
+      // Reset form fields
+      setFullName("");
+      setEmail("");
+      setNationality("");
+      setPurpose("");
+      setLoanAmount("");
+      alert("Education Loan Enquiry submitted successfully!");
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert("Error submitting enquiry. Please try again.");
+    }
   };
 
   return (
@@ -38,7 +84,13 @@ const EducationLoanPage = () => {
                   >
                     Full Name *
                   </label>
-                  <Input id="fullName" placeholder="Full Name" required />
+                  <Input
+                    id="fullName"
+                    placeholder="Full Name"
+                    required
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                  />
                 </div>
                 <div>
                   <label
@@ -52,6 +104,8 @@ const EducationLoanPage = () => {
                     type="email"
                     placeholder="Enter your email"
                     required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div>
@@ -61,25 +115,55 @@ const EducationLoanPage = () => {
                   >
                     Select your Nationality *
                   </label>
-                  <Select
-                    id="nationality"
-                    value={nationality}
-                    onChange={(e) => setNationality(e.target.value)}
-                    required
-                  >
-                    <option value="">Nationality</option>
-                    <option value="us">United States</option>
-                    <option value="uk">United Kingdom</option>
-                    <option value="in">India</option>
-                    <option value="ca">Canada</option>
-                    <option value="au">Australia</option>
+                  <Select value={nationality} onValueChange={setNationality}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Nationality" />
+                    </SelectTrigger>
+                    <SelectContent className="z-50 bg-white">
+                      <SelectItem value="us">United States</SelectItem>
+                      <SelectItem value="uk">United Kingdom</SelectItem>
+                      <SelectItem value="in">India</SelectItem>
+                      <SelectItem value="ca">Canada</SelectItem>
+                      <SelectItem value="au">Australia</SelectItem>
+                    </SelectContent>
                   </Select>
+                </div>
+                <div>
+                  <label
+                    htmlFor="purpose"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Purpose of Loan *
+                  </label>
+                  <Input
+                    id="purpose"
+                    placeholder="Purpose of Loan"
+                    required
+                    value={purpose}
+                    onChange={(e) => setPurpose(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="loanAmount"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Loan Amount *
+                  </label>
+                  <Input
+                    id="loanAmount"
+                    type="number"
+                    placeholder="Loan Amount"
+                    required
+                    value={loanAmount}
+                    onChange={(e) => setLoanAmount(e.target.value)}
+                  />
                 </div>
                 <Button
                   type="submit"
                   className="w-full bg-teal-500 hover:bg-teal-600"
                 >
-                  Proceed
+                  Submit Enquiry
                 </Button>
               </form>
             </CardContent>

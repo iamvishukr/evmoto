@@ -1,8 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { ChevronDown, DollarSign, Search, Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import round from "./assets/round.png";
-import "./SearchForm.css";
 
 export default function SearchForm() {
   const [activeTab, setActiveTab] = useState("scholarships");
@@ -31,17 +30,20 @@ export default function SearchForm() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log("Search with:", formData);
+    const searchParams = new URLSearchParams();
+    Object.entries(formData).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach(item => searchParams.append(key, item));
+      } else if (value) {
+        searchParams.append(key, value);
+      }
+    });
+    navigate(`/scholar-main?${searchParams.toString()}`);
   };
 
   const dropdownOptions = {
     nationality: ["USA", "UK", "Canada", "Australia", "India"],
-    studyLevel: [
-      "Undergraduate",
-      "Postgraduate",
-      "Doctorate",
-      "Post-Doctorate",
-    ],
+    studyLevel: ["Undergraduate", "Postgraduate", "Doctorate", "Post-Doctorate"],
     country: ["USA", "UK", "Canada", "Australia", "Germany", "France"],
     field: ["Computer Science", "Engineering", "Business", "Medicine", "Arts"],
   };
@@ -86,12 +88,11 @@ export default function SearchForm() {
       )}
     </div>
   );
-  
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-between mt-10">
       <div className="-mt-12 md:mb-0">
-        <h2 className="text-4xl font-bold text-gray-800 mb-4">
+        <h2 className="text-4xl font-bold text-gray-800 mt-10 mb-4">
           Best way to fund your Study Abroad
         </h2>
         <p className="text-gray-600 mb-6">

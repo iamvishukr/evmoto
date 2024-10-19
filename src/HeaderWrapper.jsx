@@ -1,14 +1,22 @@
 import { useState, useEffect } from "react";
-import { useLocation, Link, useNavigate } from "react-router-dom";
-import { ChevronDown, DollarSign, LogOut, Settings, Star, User, X } from "lucide-react";
+import { useLocation, Link, useNavigate, Navigate } from "react-router-dom";
+import logo from './assets/logo.png'
+import {
+  ChevronDown,
+  DollarSign,
+  LogOut,
+  Settings,
+  Star,
+  User,
+  X,
+} from "lucide-react";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { toast, Toaster } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { app } from "./lib/firebase";
-import photo from './assets/medium.png';
-
+import photo from "./assets/medium.png";
 const auth = getAuth(app);
 const db = getFirestore(app);
 
@@ -17,12 +25,15 @@ const UpperHeader = ({ onLoginClick }) => {
   const hideButtons = location.pathname === "/signup";
 
   return (
-    <header className="flex justify-between items-center p-4" style={{ height: "80px" }}>
+    <header
+      className="flex justify-between items-center p-4"
+      style={{ height: "80px" }}
+    >
       <div className="flex items-center p-4">
         <img
-          src="https://www.wemakescholars.com/themes/wms/images/logo.webp"
+          src={logo}
           alt="Logo"
-          className="h-[66px] w-24 mr-2"
+          className="w-52 mr-2"
         />
       </div>
       <div className="flex items-center space-x-2">
@@ -65,7 +76,7 @@ const LowerHeader = ({ user, handleLogout }) => {
     <header className="w-full bg-white rounded-lg shadow-md ">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <img
-          src="https://www.wemakescholars.com/themes/wms/images/logo.webp"
+          src={logo}
           alt="WE MAKE SCHOLARS"
           className="h-12"
         />
@@ -122,7 +133,7 @@ const LowerHeader = ({ user, handleLogout }) => {
                   alt="User avatar"
                   className="w-8 h-8 rounded-full"
                 />
-                <span>{user.displayName || user.email}</span>
+                <span>{user.fullName || user.email}</span>
                 <ChevronDown size={20} />
               </button>
               {isDropdownOpen && (
@@ -175,7 +186,7 @@ const LowerHeader = ({ user, handleLogout }) => {
 const LoginModal = ({ isOpen, onClose, onLogin }) => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-
+  const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -183,17 +194,27 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
     try {
       // Fetch user data from Firestore by email
       const userDoc = await getDoc(doc(db, "users", email));
-      if (!userDoc.exists()) {
-        throw new Error("User not found. Please sign up first.");
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        const isAdmin = userData.isAdmin; // Access isAdmin field
+        console.log(isAdmin);
+        localStorage.setItem("isAdmin", isAdmin);
+        localStorage.setItem("userEmail", email);
+        toast.success("Login successful!");
+
+        if (isAdmin) {
+          onLogin(userData);
+          onClose();
+          navigate("/admin-dashboard");
+        } else {
+          onLogin(userData);
+          onClose();
+        }
+      } else {
+        toast.error("No such document!");
       }
-
       // Store user data in localStorage
-      localStorage.setItem("userData", JSON.stringify(userDoc.data()));
-      localStorage.setItem("userEmail", email);
-
-      toast.success("Login successful!");
-      onLogin(userDoc.data());
-      onClose();
     } catch (error) {
       setError(error.message);
       console.error("Error during login:", error);
@@ -216,13 +237,14 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         <div className="p-6">
           <div className="flex justify-center mb-4">
             <img
-              src="https://www.wemakescholars.com/themes/wms/images/logo.webp"
+              src={logo}
               alt="WE MAKE SCHOLARS Logo"
               className="h-16 p-1"
             />
           </div>
           <h2 className="text-xl font-semibold text-center mb-4">
-            The most trusted Education Finance Platform supported by the Government
+            The most trusted Education Finance Platform supported by the
+            Government
           </h2>
           <form onSubmit={handleLogin}>
             <Input
@@ -233,7 +255,10 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <Button type="submit" className="w-full bg-teal-500 hover:bg-teal-600 text-white">
+            <Button
+              type="submit"
+              className="w-full bg-teal-500 hover:bg-teal-600 text-white"
+            >
               Login
             </Button>
           </form>
@@ -245,25 +270,24 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
 };
 
 export default function HeaderWrapper() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(localStorage.getItem("userEmail"));
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in
-        setUser(user);
-      } else {
-        // User is signed out
-        setUser(null);
-      }
-    });
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       // User is signed in
+  //       setUser(user);
+  //     } else {
+  //       // User is signed out
+  //       setUser(null);
+  //     }
+  //   });
 
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
+  //   // Cleanup subscription on unmount
+  //   return () => unsubscribe();
+  // }, []);
 
   const handleLogout = async () => {
     try {
@@ -284,7 +308,7 @@ export default function HeaderWrapper() {
     navigate("/");
   };
 
-  const path = location.pathname;
+  //const path = location.pathname;
 
   let HeaderComponent;
   if (user) {
@@ -292,13 +316,15 @@ export default function HeaderWrapper() {
   } else {
     HeaderComponent = UpperHeader;
   }
+  Navigate("/admin-dashboard");
 
+  console.log(user);
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
-      <HeaderComponent 
-        user={user} 
-        handleLogout={handleLogout} 
+      <HeaderComponent
+        user={user}
+        handleLogout={handleLogout}
         onLoginClick={() => setIsLoginModalOpen(true)}
       />
       <LoginModal

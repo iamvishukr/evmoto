@@ -21,8 +21,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const App = () => {
-  const [user, setUser] = useState(null);
-
+  const [user, setUser] = useState(localStorage.getItem("userEmail"));
+ // console.log(user);
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUser(user);
@@ -41,10 +41,7 @@ const App = () => {
     <Router>
       <Toaster position="top-center" reverseOrder={false} />
       <Routes>
-        <Route
-          path="/admin-dashboard"
-          element={<Dashboard />}
-        />
+        <Route path="/admin-dashboard" element={<Dashboard />} />
         <Route
           path="*"
           element={
@@ -53,7 +50,10 @@ const App = () => {
                 <HeaderWrapper user={user} signIn={signIn} />
                 <Routes>
                   <Route path="/" element={<SearchForm />} />
-                  <Route path="/education-loan" element={<EducationLoanPage />} />
+                  <Route
+                    path="/education-loan"
+                    element={<EducationLoanPage />}
+                  />
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/services" element={<Services />} />
